@@ -1,0 +1,111 @@
+/* General Body Styles */
+body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #ECE8DF; /* A soft, conservative off-white, like aged paper */
+    color: #0F283A; /* Dark Blue - for primary text, conveying trust and seriousness */
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+    max-width: 1000px;
+}
+
+/* Header */
+header {
+    background-color: #0F283A; /* Dark Blue */
+    color: #ECE8DF; /* Off-white text */
+    padding: 1rem 0;
+    border-bottom: 4px solid #D4AF37; /* A discreet gold/red accent for a touch of class */
+}
+
+header .container {
+    display: flex;
+    align-items: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+.logo {
+    width: 60px;
+    height: 60px;
+    margin-right: 20px;
+}
+
+/* Navigation */
+nav {
+    background-color: #3D405B; /* A muted, grayish-blue, complementary to the dark blue */
+    padding: 0.5rem 0;
+    text-align: center;
+}
+
+nav a {
+    color: #FFFFFF;
+    text-decoration: none;
+    padding: 10px 20px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+nav a:hover {
+    background-color: #D4AF37;
+    color: #0F283A;
+}
+
+/* Main Content */
+main {
+    padding: 20px 0;
+}
+
+section {
+    background-color: #FFFFFF;
+    margin-bottom: 25px;
+    padding: 25px;
+    border: 1px solid #DDDDDD;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Subtle shadow for depth */
+}
+
+h2 {
+    color: #0F283A;
+    border-bottom: 2px solid #D4AF37;
+    padding-bottom: 10px;
+    margin-top: 0;
+}
+
+/* Typography and Links */
+p {
+    margin-bottom: 1rem;
+}
+
+a {
+    color: #C00000; /* A discreet, traditional red for links/accents */
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+ul, ol {
+    padding-left: 20px;
+}
+
+li {
+    margin-bottom: 0.5rem;
+}
+
+/* Footer */
+footer {
+    background-color: #0F283A;
+    color: #FFFFFF;
+    text-align: center;
+    padding: 1rem 0;
+    margin-top: 20px;
+    border-top: 4px solid #3D405B;
+}
