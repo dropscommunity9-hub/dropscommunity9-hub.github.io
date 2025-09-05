@@ -31,20 +31,73 @@
 
         <section id="signals" class="container">
             <h2>El Generador de Señales: El Cerebro de la Operación</h2>
-            <p>El primer componente clave es el <strong>Generador de Señales de Trading</strong>. Su trabajo es analizar los datos del mercado e identificar posibles oportunidades de trading. Piense en él como un equipo de analistas de mercado experimentados que trabajan sin descanso.</p>
+            <p>El primer componente clave es el <strong>Generador de Señales de Trading</strong>. Su trabajo es analizar los datos del mercado e identificar posibles oportunidades de trading. Piense en él como un equipo de analistas de mercado experimentados que trabajan sin descanso, utilizando metodologías avanzadas como la Ingeniería Dirigida por Modelos (MDE) para asegurar un desarrollo robusto y adaptable.</p>
+        
+            <p>Este proceso se define y gestiona mediante un esquema de contrato JSON QA, que permite especificar historias de usuario, requisitos funcionales y no funcionales, criterios de aceptación, actores y casos de prueba, junto con sus interdependencias. Esto asegura que el generador de señales está diseñado para satisfacer necesidades claras y verificables.</p>
             
             <h3>Cómo Funciona: Un Proceso de Tres Pasos</h3>
             <ol>
-                <li><strong>Adquisición de Datos:</strong> Comienza recopilando grandes cantidades de datos históricos del mercado, de forma muy parecida a como un analista estudiaría los gráficos históricos.</li>
-                <li><strong>Cálculo de Indicadores:</strong> Luego, aplica herramientas matemáticas probadas (indicadores técnicos) a estos datos para identificar patrones y tendencias. Aquí es donde brillan la eficiencia y el poder analítico del sistema.</li>
-                <li><strong>Generación de Señales:</strong> Basado en una estrategia conservadora y cuidadosamente definida, genera señales simples de 'compra' o 'venta' cuando las condiciones son las adecuadas.</li>
+                <li>
+                    <h4>Adquisición de Datos</h4>
+                    <p>El Generador de Señales comienza recopilando grandes cantidades de datos históricos del mercado, de forma muy parecida a como un analista estudiaría los gráficos históricos. Accede a los datos de mercado públicos de Binance, que se agregan en archivos diarios o mensuales y están disponibles para todos los símbolos.</p>
+                    <ul>
+                        <li><strong>Tipos de Mercado Soportados:</strong> Se descarga información para mercados al contado (spot).</li>
+                        <li><strong>Tipos de Datos Clave:</strong>
+                            <ul>
+                                <li><strong>Klines (Velas Japonesas):</strong> Estos archivos contienen los precios de apertura, máximo, mínimo y cierre, volumen, tiempo de apertura y cierre, volumen del activo de cotización, número de operaciones, y otros datos por cada intervalo de tiempo (por ejemplo, 1 minuto, 1 hora, 1 día, 1 semana). Las velas japonesas son herramientas fundamentales para descifrar el sentimiento del mercado y la acción del precio.</li>
+                            </ul>
+                        </li>
+                        <li><strong>Opciones de Descarga:</strong> Los datos se pueden descargar programáticamente utilizando, permitiendo especificar el tipo de mercado, símbolos, intervalos, años, meses, fechas y rangos de fechas (por ejemplo, desde <code>2020-01-01</code> hasta la fecha actual).</li>
+                    </ul>
+                </li>
+                <li>
+                    <h4>Cálculo de Indicadores</h4>
+                    <p>Una vez adquiridos los datos, el módulo aplica herramientas matemáticas probadas (indicadores técnicos) para identificar patrones y tendencias. Aquí es donde brillan la eficiencia y el poder analítico del sistema, procesando y analizando las velas japonesas.</p>
+                    <p>Las velas japonesas encapsulan cuatro puntos de datos cruciales: precio de apertura, precio más alto, precio más bajo y precio de cierre. El color de la vela indica la dirección del movimiento del precio, y el cuerpo y las mechas proporcionan una narrativa visual de la actividad del mercado y el equilibrio entre compradores y vendedores.</p>
+                    <p>El módulo utiliza una combinación de indicadores para una análisis comprensivo:</p>
+                    <ul>
+                        <li><strong>Medias Móviles Exponenciales (EMA):</strong> Similar a la SMA, pero otorga <strong>más peso a los puntos de datos recientes</strong>, lo que le permite reaccionar más rápido a los cambios de precios. El factor de ponderación (alfa) controla qué tan rápido el promedio "olvida" el pasado. Por defecto, la EMA también se calcula sobre los <strong>precios de cierre</strong> de las velas.</li>
+                        <li><strong>Bandas de Bollinger:</strong> Una herramienta de análisis técnico que mide la volatilidad e identifica posibles condiciones de sobrecompra o sobreventa en un mercado. Consiste en tres líneas:
+                            <ul>
+                                <li><strong>Banda Central:</strong> Una SMA (generalmente de 20 periodos).</li>
+                                <li><strong>Banda Superior:</strong> Calculada como SMA(n) + k × σ (donde σ es la desviación estándar).</li>
+                                <li><strong>Banda Inferior:</strong> Calculada como SMA(n) - k × σ.</li>
+                            </ul>
+                            <p>Las bandas se ensanchan con el aumento de la volatilidad y se contraen con su disminución ("squeeze"). El precio tiende a permanecer dentro de las bandas (aproximadamente el 95% del tiempo con 2 desviaciones estándar). Tocar la banda superior sugiere sobrecompra, y tocar la inferior sugiere sobreventa. Por defecto, las Bandas de Bollinger se calculan usando los <strong>precios de cierre</strong>.</p>
+                        </li>
+                        <li><strong>Índice de Fuerza Relativa (RSI):</strong> Un oscilador de momentum que mide la velocidad y el cambio de los movimientos del precio, con un valor entre 0 y 100. Se usa para detectar condiciones de sobrecompra (generalmente >70) o sobreventa (generalmente <30). El RSI se computa basándose en los <strong>precios de cierre</strong> de las velas, calculando los cambios de cierre a cierre y suavizando las ganancias y pérdidas promedio. Es útil para señales de reversión y confirmación de tendencias.</li>
+                        <li><strong>Convergencia/Divergencia de Medias Móviles (MACD):</strong> Un indicador de momentum que sigue la tendencia, utilizado para identificar cambios en la fuerza, dirección, momentum y duración de una tendencia. Se calcula a partir de EMAs:
+                            <ul>
+                                <li><strong>Línea MACD:</strong> Diferencia entre una EMA de 12 periodos y una EMA de 26 periodos.</li>
+                                <li><strong>Línea de Señal:</strong> Una EMA de 9 periodos de la Línea MACD.</li>
+                                <li><strong>Histograma:</strong> La diferencia entre la Línea MACD y la Línea de Señal.</li>
+                            </ul>
+                            <p>Las intersecciones de la Línea MACD y la Línea de Señal, los cruces de la línea cero y las divergencias son señales clave.</p>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <h4>Generación de Señales</h4>
+                    <p>Basado en una estrategia conservadora y cuidadosamente definida, el generador evalúa las interacciones y confirmaciones de todos los indicadores calculados. No se basa en un solo indicador, sino en la confluencia de múltiples señales para generar entradas de 'compra' o 'venta' de alta probabilidad.</p>
+                    <p>Por ejemplo, una señal de compra fuerte podría surgir de la combinación de un patrón de vela Martillo en un nivel de soporte, acompañado de un pico de volumen, mientras que el RSI indica una condición de sobreventa y el MACD muestra un cruce alcista. De manera similar, una señal de venta podría confirmarse por un Hombre Colgado en un nivel de resistencia con alto volumen y RSI en sobrecompra.</p>
+                    <p>El objetivo es identificar <strong>señales de entrada</strong> cuando las condiciones son óptimas, minimizando el riesgo y maximizando el potencial. Se aplica el enfoque MDE para transformar los requisitos del proceso en el diseño del generador, asegurando que la lógica de las señales sea sistemática y automatizable.</p>
+                </li>
             </ol>
-
+        
             <h3>Fortalezas Clave:</h3>
             <ul>
-                <li><strong>Confiable y Consistente:</strong> Utiliza un enfoque disciplinado y basado en datos para encontrar oportunidades.</li>
-                <li><strong>Flexible:</strong> Puede configurarse para analizar diferentes mercados y marcos de tiempo.</li>
-                <li><strong>Eficiente:</strong> Automatiza la compleja y laboriosa tarea del análisis de mercado.</li>
+                <li>
+                    <strong>Confiable y Consistente:</strong>
+                    <p>El sistema utiliza un enfoque disciplinado y basado en datos para encontrar oportunidades, eliminando sesgos emocionales y errores humanos comunes en el análisis manual. La integración de múltiples indicadores técnicos probados y la confirmación contextual aumentan la fiabilidad de las señales generadas. La coherencia proviene de aplicar algoritmos estandarizados y verificados, asegurando que las mismas condiciones de mercado siempre producen las mismas señales.</p>
+                </li>
+                <li>
+                    <strong>Flexible:</strong>
+                    <p>El generador es altamente configurable y adaptable. Puede configurarse para analizar diferentes mercados spot, una amplia gama de símbolos (por ejemplo, BTCUSDT, ETHUSDT) y varios marcos de tiempo (desde 1s hasta 1mo).</p>
+                </li>
+                <li>
+                    <strong>Eficiente:</strong>
+                    <p>Automatiza la compleja y laboriosa tarea del análisis de mercado, que de otro modo requeriría horas de escrutinio humano. La capacidad de procesar rápidamente grandes volúmenes de datos históricos y calcular múltiples indicadores de forma simultánea permite la identificación de oportunidades de trading en tiempo real o en lotes, liberando a los analistas para tareas más estratégicas. Este proceso es similar a cómo la MDE automatiza los pasos de transformación de modelos a código, aumentando drásticamente la productividad.</p>
+                </li>
             </ul>
         </section>
 
